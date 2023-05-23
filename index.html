@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <script async src="https://www.googletagmanager.com/gtag/js?id=UA-91864013-5"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag() { dataLayer.push(arguments); }
+    gtag('js', new Date());
+
+    gtag('config', 'UA-91864013-5');
+  </script>
+
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:site" content="@ReiiYoda" />
+  <meta name="twitter:title" content="Arbitrary Style Transfer with TF.js" />
+  <meta name="twitter:description" content="Paint yourself in the style of any painting, right in the browser." />
+  <meta name="twitter:image"
+    content="https://raw.githubusercontent.com/reiinakano/arbitrary-image-stylization-tfjs/master/readme_img/stylize.jpg" />
+
+  <title>Sáng Tạo Không Giới Hạn</title>
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.5.0/css/all.css"
+    integrity="sha384-B4dIYHKNBt8Bc12p+WXckhzcICo0wtJAoU8YZTY5qE0Id1GSseTk6S+L3BlXeVIU" crossorigin="anonymous">
+
+  <!-- Bootstrap core CSS -->
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.1.3/css/bootstrap.min.css" rel="stylesheet">
+  <script src="dist/bundle.js"></script>
+
+
+</head>
+
+<style>
+  .centered {
+    margin: auto;
+    display: block;
+  }
+</style>
+
+<body>
+
+  <!-- JQuery -->
+  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+  <!-- Bootstrap tooltips -->
+  <script type="text/javascript"
+    src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.4/umd/popper.min.js"></script>
+  <!-- Bootstrap core JavaScript -->
+  <script type="text/javascript"
+    src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.1.3/js/bootstrap.min.js"></script>
+
+
+  <script type="text/javascript">
+    $(function () {
+      $('[data-toggle="tooltip"]').tooltip()
+    })
+  </script>
+
+  <input type="file" id="file-select" style="display: none" accept="image/x-png,image/gif,image/jpeg" />
+  <!-- heading -->
+  <div class="jumbotron jumbotron-fluid py-4" style="text-align: center; background-color: #badceb;">
+    <div class="container">
+      <h4>Sáng Tạo Không Giới Hạn</h1>
+    </div>
+  </div>
+  <div class="">
+    <div id="mobile-warning" hidden class="alert alert-warning" role="alert">
+      Web có thể xảy ra lỗi khi chạy trên di động.
+    </div>
+    <ul class="nav nav-tabs nav-fill" id="myTab" role="tablist">
+      <li class="nav-item ">
+        <a class="nav-link active" id="stylize-tab" data-toggle="tab" href="#stylize" role="tab" aria-controls="stylize"
+          aria-selected="true">Một Ảnh Style</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" id="combine-tab" data-toggle="tab" href="#combine" role="tab" aria-controls="combine"
+          aria-selected="false">Hai Ảnh Style</a>
+      </li>
+    </ul>
+    <div class="tab-content" id="myTabContent">
+      <div class="tab-pane fade show active" id="stylize" role="tabpanel" aria-labelledby="stylize-tab">
+        <div class="container">
+          <div class="row my-4">
+            <div class="col mx-5 my-4">
+              <img id="content-img" class="centered" src="images/upload.jpg" height=256></img>
+              <br>
+              <label for="content-img-size">Kích thước ảnh chính</label>
+              <i class="far fa-question-circle" data-toggle="tooltip" data-placement="top"
+                title="Kích thước lớn thì kết quả chi tiết hơn."></i>
+              <!-- Nhưng thời gian xử lý sẽ lâu hơn -->
+              <input type="range" min="256" max="400" value="256" class="custom-range centered" id="content-img-size">
+              <br>
+              <select id="content-select" class="centered custom-select">
+                <option value="" disabled selected="selected">Chọn ảnh chính</option>
+                <option value="pic">Camara</option>
+                <option value="file">Tải lên từ file</option>
+                <option value="stata">Toà nhà Stata</option>
+                <option value="hoa_minzy">Hoà Minzy</option>
+                <option value="cat1">Con mèo nằm sofa</option>
+                <option value="NguaTamBien">Ngựa Tắm Biển</option>
+                <option value="chicago">Thành Phố Chiago</option>
+              </select>
+            </div>
+            <div class="col mx-5 my-4">
+              <img id="style-img" class="centered" crossorigin="anonymous" src="images/upload.jpg" height=256></img>
+              <br>
+              <label for="style-img-size">Kích thước ảnh Style</label>
+              <i class="far fa-question-circle" data-toggle="tooltip" data-placement="top"
+                title='Kích thước càng nhỏ sẽ càng ảnh hưởng đến kết quả.'></i>
+              <input id="style-img-square" type="checkbox" style="vertical-align: middle; float: right;"
+                data-toggle="tooltip" data-placement="top" title="Style hình vuông">
+              <input type="range" min="100" max="400" value="256" class="custom-range centered" id="style-img-size">
+              <br>
+              <select id="style-select" class="centered custom-select">
+                <option value="" disabled selected="selected">Chọn ảnh Style</option>
+                <option value="file">Tải lên từ file</option>
+                <option value="random">Ngẫu nhiên</option>
+                <option value="udnie">Udnie style</option>
+                <option value="DemDaySao_VanGogh">Đêm Đầy Sao - Van Gogh</option>
+                <option value="RoiLoanLoAu">Rối loạn lo âu</option>
+                <option value="clouds">Những đám mây đỏ</option>
+                <option value="towers">Tháp kì hoặc</option>
+                <option value="red_circles">Vòng tròn đỏ</option>
+              </select>
+            </div>
+          </div>
+
+
+          <div class="row my-4">
+            <div class="col-md-6 ">
+              <canvas id="stylized" class="centered"></canvas>
+              <br>
+              <label for="stylized-img-ratio">Độ lớn chuyển đổi</label>
+              <i class="far fa-question-circle" data-toggle="tooltip" data-placement="top"
+                title="Càng nhỏ, càng giống ảnh chính"></i>
+              <input type="range" min="0" max="100" value="100" class="custom-range centered" id="stylized-img-ratio">
+            </div>
+          </div>
+          <div class="row my-4">
+            <div class="col-md-5 ">
+              <button disabled id="style-button" type="button" class="btn btn-primary btn-block">Đang tạo ảnh. Vui lòng
+                chờ ...</button>
+            </div>
+
+            <!-- Nút Random -->
+            <div class="col-md-1">
+              <button type="button" id="randomize" class="btn btn-light btn-block">
+                <i class="fas fa-random" data-toggle="tooltip" data-placement="top"
+                  title="Khởi tạo thông số ngẫu nhiên"></i>
+              </button>
+            </div>
+
+            <!-- Modal -->
+            <div class="modal fade " id="myModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle"
+              aria-hidden="true">
+              <div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <h2 class="modal-title centered" id="exampleModalCenterTitle">Tạo bài viết</h2>
+                  </div>
+                  <div class="modal-body">
+                    <div class="form-group">
+                      <textarea class="form-control" rows="3" placeholder="Viết bài viết của bạn"></textarea>
+                    </div>
+                    <h1>Modal 1</h1>
+                    <canvas id="display-img" class="centered"></canvas>
+                  </div>
+                  <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Đóng</button>
+                    <button type="button" class="btn btn-primary" id="save-changes">Đăng</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+
+
+            <!-- Nút Tiếp tục -->
+            <div class="col-md-4 mx-auto">
+              <button type="button" id="push-image" class="btn btn-light btn-block bg-info" data-toggle="modal"
+                data-target="#myModal" disabled>
+                <i class="text-center font-weight-bold text-white">Tiếp tục</i>
+              </button>
+            </div>
+
+            <style>
+              #push-image[disabled] {
+                cursor: not-allowed;
+              }
+
+              #display-img {
+                max-width: 100%;
+                max-height: 400px;
+                /* Điều chỉnh chiều cao tối đa của ảnh trong modal */
+                display: block;
+                margin: 0 auto;
+              }
+            </style>
+          </div>
+        </div>
+      </div>
+
+
+
+      <div class="tab-pane fade" id="combine" role="tabpanel" aria-labelledby="combine-tab">
+        <div class="container">
+
+          <div class="row my-4">
+
+            <div class="col py-3">
+              <img id="c-style-img-1" class="centered" crossorigin="anonymous" src="images/upload.jpg" height=256></img>
+              <br>
+              <label for="c-style-img-1-size">Kích thước Style A </label>
+              <i class="far fa-question-circle" data-toggle="tooltip" data-placement="top"
+                title="Kích thước càng nhỏ càng ảnh hưởng đến kết quả " seen" by the network."></i>
+              <input id="c-style-1-square" type="checkbox" style="vertical-align: middle; float: right;"
+                data-toggle="tooltip" data-placement="top" title="Style hình vuông">
+              <input type="range" min="100" max="400" value="256" class="custom-range centered" id="c-style-img-1-size">
+              <br>
+              <select id="c-style-1-select" class="centered custom-select">
+                <option value="" disabled>Chọn ảnh style A</option>
+                <option value="file">Chọn từ file</option>
+                <option value="random">Ngẫu nhiên</option>
+                <option value="udnie">Udnie style</option>
+                <option value="DemDaySao_VanGogh">Đêm Đầy Sao - Van Gogh</option>
+                <option value="RoiLoanLoAu">Rối loạn lo âu</option>
+                <option value="clouds">Những đám mây đỏ</option>
+                <option value="towers">Tháp kì hoặc</option>
+                <option value="red_circles">Vòng tròn đỏ</option>
+              </select>
+            </div>
+
+            <div class="col py-3">
+              <img id="c-style-img-2" class="centered" crossorigin="anonymous" src="images/upload.jpg" height=256></img>
+              <br>
+              <label for="c-style-img-2-size">Kích thước Style B</label>
+              <i class="far fa-question-circle" data-toggle="tooltip" data-placement="top"
+                title="Kích thước càng nhỏ càng ảnh hưởng đến kết quả" seen" by the network."></i>
+              <input id="c-style-2-square" type="checkbox" style="vertical-align: middle; float: right;"
+                data-toggle="tooltip" data-placement="top" title="Style hình vuông">
+              <input type="range" min="100" max="400" value="256" class="custom-range centered" id="c-style-img-2-size">
+              <br>
+              <select id="c-style-2-select" class="centered custom-select">
+                <option value="" disabled>Chọn ảnh style B</option>
+                <option value="file">Chọn từ file</option>
+                <option value="random">Ngẫu nhiên</option>
+                <option value="udnie">Udnie style</option>
+                <option value="DemDaySao_VanGogh">Đêm Đầy Sao - Van Gogh</option>
+                <option value="RoiLoanLoAu">Rối loạn lo âu</option>
+                <option value="clouds">Những đám mây đỏ</option>
+                <option value="towers">Tháp kì hoặc</option>
+                <option value="red_circles">Vòng tròn đỏ</option>
+              </select>
+            </div>
+
+            <!-- ///  -->
+            <div class="col py-3">
+              <img id="c-content-img" class="centered" src="images/upload.jpg" height=256></img>
+              <br>
+              <label for="c-content-img-size">Kích thước ảnh chính</label>
+              <i class="far fa-question-circle" data-toggle="tooltip" data-placement="top"
+                title="Hình ảnh nội dung lớn hơn dẫn đến kết quả đầu ra chi tiết hơn."></i>
+              <input type="range" min="256" max="400" value="256" class="custom-range centered" id="c-content-img-size">
+              <br>
+              <select id="c-content-select" class="centered custom-select">
+                <option value="" disabled>Chọn ảnh chính</option>
+                <option value="pic">Chụp từ camara</option>
+                <option value="file">Chọn từ file</option>
+                <option value="stata">Toàn nhà Stata</option>
+                <option value="hoa_minzy">Hoà Minzy</option>
+                <option value="golden_gate">Cầu Vàng</option>
+                <option value="beach">beach</option>
+                <option value="chicago">Thanh Phố Chicago</option>
+              </select>
+            </div>
+          </div>
+
+
+          <div class="row my-4 py-3">
+            <div class="col-md-6 ">
+              <canvas id="c-stylized" class="centered"></canvas>
+              <br>
+              <label for="c-stylized-img-ratio"> Cường độ chuyển đổi</label>
+              <i class="far fa-question-circle" data-toggle="tooltip" data-placement="top"
+                title="Ngay giữa sẽ cân bằng 2 style, càng lệch trái sẽ càng giống style A."></i>
+              <input type="range" min="0" max="100" value="50" class="custom-range centered" id="c-stylized-img-ratio">
+            </div>
+          </div>
+          <div class="row my-4">
+            <div class="col-md-5 ">
+              <button disabled id="combine-button" type="button" class="btn btn-primary btn-block">Đang tạo ảnh. Vui
+                lòng chờ ...</button>
+            </div>
+            <div class="col-md-1">
+              <button type="button" id="c-randomize" class="btn btn-light btn-block">
+                <i class="fas fa-random" data-toggle="tooltip" data-placement="top" title="Tạo tham số ngẫu nhiên"></i>
+              </button>
+            </div>
+
+            <!-- Nút Tiếp tục -->
+            <div class="col-md-4 mx-auto">
+              <button type="button" id="c-push-image" class="btn btn-light btn-block bg-info" data-toggle="modal"
+                data-target="#c-myModal" disabled>
+                <i class="text-center font-weight-bold text-white">Tiếp tục</i>
+              </button>
+            </div>
+          </div>
+          <style>
+            #c-push-image[disabled] {
+              cursor: not-allowed;
+            }
+            #c-display-img {
+                max-width: 100%;
+                max-height: 400px;
+                display: block;
+                margin: 0 auto;
+              }
+          </style>
+
+          <!-- Modal -->
+          <div class="modal fade " id="c-myModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitleComb"
+            aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered" role="document">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h2 class="modal-title centered" id="exampleModalCenterTitleComb">Tạo bài viết</h2>
+                </div>
+                <div class="modal-body">
+                  <div class="form-group">
+                    <textarea class="form-control" rows="3" placeholder="Viết bài viết của bạn"></textarea>
+                  </div>
+                  <h1>Modal 2</h1>
+                  <canvas id="c-display-img" class="centered"></canvas>
+                </div>
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-secondary" data-dismiss="modal">Đóng</button>
+                  <button type="button" class="btn btn-primary" id="c-save-changes">Đăng</button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <div class="container">
+      <div class="row my-4">
+        <div class="col-md-3">
+          <select disabled id="model-select-style" class="centered custom-select">
+            <option value="mobilenet">[Fast] Distilled MobileNet style model</option>
+            <option value="inception" selected="selected">[High quality] Original Inceptionv3 style model</option>
+          </select>
+        </div>
+        <div class="col-md-3">
+          <select disabled id="model-select-transformer" class="centered custom-select">
+            <option value="separable">[Fast] Separable_conv2d transformer</option>
+            <option value="original" selected="selected">[High quality] Original transformer model </option>
+          </select>
+        </div>
+      </div>
+    </div>
+
+    <canvas id="hidden-canvas" style="display: none"></canvas>
+
+    <div class="modal fade" id="cam-modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+      aria-hidden="true">
+      <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLabel">Chụp màn hình!</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <video id="webcam-video" class="centered" width="500" height="375"></video>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Thoát</button>
+            <button type="button" class="btn btn-primary" id="snap-button">Chụp!</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</body>
+</html>
