@@ -5,6 +5,26 @@ Welcome to the Style Image Transfer project! This project showcases the applicat
 ## Introduction
 Style image transfer involves using neural networks to apply the artistic style of one image to the content of another image. This project leverages state-of-the-art deep learning models to achieve high-quality style transfer. The web demo allows users to upload images and apply different artistic styles to see the results in real-time.
 
+
+## Demo
+
+Demo 1vs1
+
+https://github.com/PoLsss/DemoImg/assets/98370447/a5c2a35f-0507-411f-a562-dcf6ccd869c1
+
+Demo 1vs1vs1
+
+https://github.com/PoLsss/DemoImg/assets/98370447/1f936024-39b5-45ce-b2a8-0e6a80a6f391
+
+And some generated result pictures.
+| <div align="center">Style</div> | <div align="center">Content</div> | <div align="center">Generated</div> |
+|:-|:-|:-|
+|![1](https://github.com/PoLsss/DemoImg/assets/98370447/843f69d3-6ff1-458e-8837-8303b485d46d)| ![ori1](https://github.com/PoLsss/DemoImg/assets/98370447/48ffef5f-9e4f-47c2-b8e5-81b5b3dac261) |![1-result](https://github.com/PoLsss/DemoImg/assets/98370447/5e7d30c8-3f56-48ee-99de-6b3cd4812d97) |
+|![2](https://github.com/PoLsss/DemoImg/assets/98370447/a99a5cf0-7cc7-493c-b743-22f565c7f621) | ![orri2](https://github.com/PoLsss/DemoImg/assets/98370447/29c9b7bf-f41c-4ed9-a9d6-67ef48c7dbe0)| ![re2](https://github.com/PoLsss/DemoImg/assets/98370447/e8615da4-733a-47d9-86c5-da147771b26a)|
+|![3](https://github.com/PoLsss/DemoImg/assets/98370447/077b727b-770a-48d8-800d-77e14b65acdc)|![ori3](https://github.com/PoLsss/DemoImg/assets/98370447/0717d270-f323-4293-ab51-bfd6a47f797d) | ![re3](https://github.com/PoLsss/DemoImg/assets/98370447/308f4fdd-6ed3-4822-ac16-4656bc183bdb)|
+
+
+
 ## Neural Style Transfer
 
 **Goal:** Transforming your photos into artistic style images is something that surprises and delights everyone. However, for those who have researched deep learning networks, this is a fairly familiar and basic technique of Deep Learning networks called Neural Style Transfer. (Refer to https://arxiv.org/abs/1508.06576)
@@ -53,23 +73,6 @@ Use the Gradient algorithm to update the generate_image. The process will loop t
 - HTML/CSS/JavaScript: Frontend technologies for the web interface.
 
 
-
-## Demo
-
-Demo 1vs1
-
-https://github.com/PoLsss/DemoImg/assets/98370447/a5c2a35f-0507-411f-a562-dcf6ccd869c1
-
-Demo 1vs1vs1
-
-https://github.com/PoLsss/DemoImg/assets/98370447/1f936024-39b5-45ce-b2a8-0e6a80a6f391
-
-And some generated result pictures.
-| <div align="center">Style</div> | <div align="center">Content</div> | <div align="center">Generated</div> |
-|:-|:-|:-|
-|![1](https://github.com/PoLsss/DemoImg/assets/98370447/843f69d3-6ff1-458e-8837-8303b485d46d)| ![ori1](https://github.com/PoLsss/DemoImg/assets/98370447/48ffef5f-9e4f-47c2-b8e5-81b5b3dac261) |![1-result](https://github.com/PoLsss/DemoImg/assets/98370447/5e7d30c8-3f56-48ee-99de-6b3cd4812d97) |
-|![2](https://github.com/PoLsss/DemoImg/assets/98370447/a99a5cf0-7cc7-493c-b743-22f565c7f621) | ![orri2](https://github.com/PoLsss/DemoImg/assets/98370447/29c9b7bf-f41c-4ed9-a9d6-67ef48c7dbe0)| ![re2](https://github.com/PoLsss/DemoImg/assets/98370447/e8615da4-733a-47d9-86c5-da147771b26a)|
-|![3](https://github.com/PoLsss/DemoImg/assets/98370447/077b727b-770a-48d8-800d-77e14b65acdc)|![ori3](https://github.com/PoLsss/DemoImg/assets/98370447/0717d270-f323-4293-ab51-bfd6a47f797d) | ![re3](https://github.com/PoLsss/DemoImg/assets/98370447/308f4fdd-6ed3-4822-ac16-4656bc183bdb)|
 
 
 
